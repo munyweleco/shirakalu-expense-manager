@@ -2,10 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Base\StaffType as BaseStaffType;
 
-class StaffType extends Model
+class StaffType extends BaseStaffType
 {
-    use HasFactory;
+	protected $hidden = [
+		'active'
+	];
+
+	protected $fillable = [
+		'staff_type_name',
+		'active'
+	];
 }
