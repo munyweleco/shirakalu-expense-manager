@@ -6,11 +6,11 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "laravel/framework": "^11.1.1",
+        "laravel/framework": "^10",
         "laravel/tinker": "^2.9",
         "ext-pdo": "^8.2"
     },
-    "require-dev": {
+    "require-devs": {
         "fakerphp/faker": "^1.23.1",
         "laravel/pint": "^1.15",
         "laravel/sail": "^1.29.1",
