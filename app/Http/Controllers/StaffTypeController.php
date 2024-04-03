@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\StaffType;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
 class StaffTypeController extends Controller
@@ -10,9 +13,10 @@ class StaffTypeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View|Application|Factory|\Illuminate\Contracts\Foundation\Application
     {
-        //
+        $staffList = StaffType::all();
+        return view('staff-type.index', compact('staffList'));
     }
 
     /**

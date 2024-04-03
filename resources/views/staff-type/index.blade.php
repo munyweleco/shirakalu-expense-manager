@@ -1,0 +1,1 @@
+resources/views/staff-type/index.blade.php
