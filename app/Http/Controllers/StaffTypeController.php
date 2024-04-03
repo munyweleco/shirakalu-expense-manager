@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\StaffType;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
-use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
 class StaffTypeController extends Controller
@@ -13,10 +10,18 @@ class StaffTypeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View|Application|Factory|\Illuminate\Contracts\Foundation\Application
+    public function index()
     {
         $staffList = StaffType::all();
         return view('staff-type.index', compact('staffList'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('staff-type.create');
     }
 
     /**
@@ -30,15 +35,24 @@ class StaffTypeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(StaffType $staffType)
+    public function show(string $id)
     {
         //
     }
 
     /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(int $id)
+    {
+        $staff = StaffType::findOrFail($id);
+        return view('staff-type.edit', ['staff' => $staff]);
+    }
+
+    /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, StaffType $staffType)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -46,8 +60,11 @@ class StaffTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(StaffType $staffType)
+    public function destroy(string $id)
     {
-        //
+        $post = StaffType::findOrFail($id);
+        $post->delete();
+        return redirect()->route('staff-type.index')
+            ->with('success', 'Staff deleted successfully');
     }
 }

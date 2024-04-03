@@ -26,6 +26,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|StaffType whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StaffType whereStaffTypeName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StaffType whereUpdatedAt($value)
+ * @property string $name
+ * @property string $description
+ * @method static \Illuminate\Database\Eloquent\Builder|StaffType whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StaffType whereName($value)
  * @mixin \Eloquent
  */
 class StaffType extends Model

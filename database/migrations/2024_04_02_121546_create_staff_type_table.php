@@ -12,7 +12,8 @@ return new class extends Migration {
     {
         Schema::create('staff_type', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('staff_type_name', 50)->nullable(false);
+            $table->string('name', 20)->nullable(false);
+            $table->tinyText('description');
             $table->smallInteger('active')->default(1)->nullable(false);
             $table->timestamps();
         });
