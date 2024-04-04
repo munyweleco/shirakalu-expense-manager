@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\StaffType;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class StaffTypeController extends Controller
@@ -35,15 +39,16 @@ class StaffTypeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $id): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        //
+        $staff = StaffType::findOrFail($id);
+        return view('staff-type.show', ['staff' => $staff]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(int $id)
+    public function edit(int $id): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $staff = StaffType::findOrFail($id);
         return view('staff-type.edit', ['staff' => $staff]);
@@ -52,15 +57,18 @@ class StaffTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): RedirectResponse
     {
-        //
+        $staff = StaffType::findOrFail($id);
+        $staff->update($request->all());
+        return redirect()->route('staff-type.index')
+            ->with('success', 'Staff updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): RedirectResponse
     {
         $post = StaffType::findOrFail($id);
         $post->delete();

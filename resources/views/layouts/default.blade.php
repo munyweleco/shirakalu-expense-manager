@@ -3,7 +3,7 @@
 @include('includes.head')
 <body>
 @include('includes.nav')
-<div class="container">
+<div class="container h-100 mt-5">
     @yield('content')
 </div>
 @include('includes.footer')

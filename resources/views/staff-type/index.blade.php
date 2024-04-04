@@ -26,10 +26,10 @@
             <div class="col-sm">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title">{{ $staff->staff_type_name }}</h5>
+                        <h5 class="card-title">{{ $staff->name }}</h5>
                     </div>
                     <div class="card-body">
-                        <p class="card-text">{{ $staff->staff_type_name }}</p>
+                        <p class="card-text">{{ $staff->description }}</p>
                     </div>
                     <div class="card-footer">
                         <div class="row">

@@ -1,47 +1,34 @@
 <?php
 
-/**
- * Created by Reliese Model.
- */
-
 namespace App\Models;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Base\StaffType as BaseStaffType;
 
 /**
- * Class StaffType
+ * 
  *
  * @property int $id
- * @property string $staff_type_name
- * @property int $active
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @package App\Models
+ * @property string $name
+ * @property string $description
+ * @property bool $active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|StaffType newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|StaffType newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|StaffType query()
  * @method static \Illuminate\Database\Eloquent\Builder|StaffType whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StaffType whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StaffType whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StaffType whereStaffTypeName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StaffType whereUpdatedAt($value)
- * @property string $name
- * @property string $description
  * @method static \Illuminate\Database\Eloquent\Builder|StaffType whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StaffType whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StaffType whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StaffType whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class StaffType extends Model
+class StaffType extends BaseStaffType
 {
-	protected $table = 'staff_type';
-
-	protected $casts = [
-		'active' => 'int'
-	];
-
 	protected $fillable = [
-		'staff_type_name',
+		'name',
+		'description',
 		'active'
 	];
 }

@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->bigIncrements('id');
             $table->string('name', 20)->nullable(false);
             $table->tinyText('description');
-            $table->smallInteger('active')->default(1)->nullable(false);
+            $table->boolean('active')->default(1)->nullable(false);
             $table->timestamps();
         });
     }

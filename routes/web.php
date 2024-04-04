@@ -9,12 +9,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [StaffTypeController::class, 'index'])->name('staff-type.index');
 Route::get('/staff-type/create', [StaffTypeController::class, 'store'])->name('staff-type.create');
+Route::get('/staff-type/{staff}', [StaffTypeController::class, 'show'])->name('staff-type.show');
 Route::get('/staff-type/{staff}/edit', [StaffTypeController::class, 'edit'])->name('staff-type.edit');
 Route::put('/staff-type/{staff}', [StaffTypeController::class, 'update'])->name('staff-type.update');
 Route::delete('/staff-type/{staff}', [StaffTypeController::class, 'destroy'])->name('staff-type.destroy');
-Route::get('/', [StaffTypeController::class, 'index'])->name('staff-type.index');
-Route::get('/', [StaffTypeController::class, 'index'])->name('staff-type.index');
-
 
 
 //// returns the form for adding a post

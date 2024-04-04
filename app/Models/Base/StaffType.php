@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $name
  * @property string $description
- * @property int $active
+ * @property bool $active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @package App\Models\Base
@@ -35,6 +35,6 @@ class StaffType extends Model
 	protected $table = 'staff_type';
 
 	protected $casts = [
-		'active' => 'int'
+		'active' => 'bool'
 	];
 }
