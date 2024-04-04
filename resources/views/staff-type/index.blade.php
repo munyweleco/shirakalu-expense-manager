@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title', 'Edit staff type')
+@section('title', 'List staff type')
 @section('content')
     <div class="row">
         @foreach ($staffList as $staff)
