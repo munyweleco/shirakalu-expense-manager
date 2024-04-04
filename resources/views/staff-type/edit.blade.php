@@ -2,7 +2,7 @@
 
 
 @extends('layouts.default')
-@section('title', 'Edit staff')
+@section('title', 'Edit staff type')
 @section('content')
     <div class="row h-100 justify-content-center align-items-center">
         <div class="col-10 col-md-8 col-lg-6">

@@ -33,7 +33,10 @@ class StaffTypeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        StaffType::create($request->all());
+
+        return redirect()->route('staff-type.index')
+            ->with('success', 'Staff created successfully.');
     }
 
     /**
