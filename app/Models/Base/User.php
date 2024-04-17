@@ -7,7 +7,7 @@
 namespace App\Models\Base;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as AuthFactory;
 
 /**
  * Class User
@@ -34,11 +34,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class User extends Model
+class User extends AuthFactory
 {
-	protected $table = 'users';
+    protected $table = 'users';
 
-	protected $casts = [
-		'email_verified_at' => 'datetime'
-	];
+    protected $casts = [
+        'email_verified_at' => 'datetime'
+    ];
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataGrids\StaffTypeDataGrid;
+use App\DataTables\StaffTypeDataTable;
 use App\Models\StaffType;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -16,10 +17,12 @@ class StaffTypeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(StaffTypeDataTable $dataTable)
     {
-        $staffList = StaffType::all();
-        return view('staff-type.index', compact('staffList'));
+//        $staffList = StaffType::all();
+
+        return $dataTable->render('staff-type.index');
+//        return view('staff-type.index', compact('staffList'));
     }
 
     /**
