@@ -30,6 +30,6 @@ Route::get('users/{user}/edit', [UsersController::class, 'edit'])->name('users.e
 Route::put('users/{user}', [UsersController::class, 'update'])->name('users.update');
 
 // Delete User Route
-Route::delete('users/{user}', [UsersController::class, 'destroy'])->name('users.destroy');
+Route::delete('users/{user}/delete', [UsersController::class, 'destroy'])->name('users.destroy');
 
 

@@ -21,13 +21,17 @@ class UsersDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->addColumn('edit', function ($user) {
-                return '<a href="'.route('users.edit', $user->id).'" class="btn btn-sm btn-primary mr-1">Edit</a>';
+                return '<a href="' . route('users.edit', $user->id) . '" class="btn btn-sm btn-primary mr-1">Edit</a>';
             })
             ->addColumn('view', function ($user) {
-                return '<a href="'.route('users.show', $user->id).'""class="btn btn-sm btn-success mr-1">View</a>';
+                return '<a href="' . route('users.show', $user->id) . '""class="btn btn-sm btn-success mr-1">View</a>';
             })
             ->addColumn('delete', function ($user) {
-                return '<button type="button" class="btn btn-sm btn-danger delete-user" data-toggle="modal" data-target="#delete-user-modal" data-id="'.$user->id.'">Delete</button>';
+                return '<form method="POST" action="' . route('users.destroy', $user->id) . '" onsubmit="return confirm(\'Are you sure you want to delete this user?\')">
+                            ' . csrf_field() . '
+                            ' . method_field('DELETE') . '
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>';
             })
 //            ->addColumn('action', function ($user) {
 //                return '<a href="/users/'.$user->id.'/edit" class="btn btn-danger btn-sm">Edit</a>';
@@ -58,6 +62,9 @@ class UsersDataTable extends DataTable
         return $this->builder()
             ->setTableId('users-table')
             ->columns($this->getColumns())
+            ->parameters($this->getBuilderParameters())
+            ->responsive(true)
+            ->autoWidth(false)
             ->minifiedAjax()
             //->dom('Bfrtip')
             ->orderBy(1)
@@ -83,9 +90,22 @@ class UsersDataTable extends DataTable
             Column::make('email'),
             Column::make('created_at')->title('Created'),
             Column::make('updated_at')->title('Updated'),
-            Column::computed('view') ->exportable(false)->printable(false)->width(60),
-            Column::computed('edit') ->exportable(false)->printable(false)->width(60),
-            Column::computed('delete') ->exportable(false)->printable(false)->width(60),
+            Column::computed('view')->exportable(false)->printable(false)->width(60),
+            Column::computed('edit')->exportable(false)->printable(false)->width(60),
+            Column::computed('delete')->exportable(false)->printable(false)->width(60),
+        ];
+    }
+
+    protected function getBuilderParameters(): array
+    {
+        return [
+            'processing' => true,
+            'serverSide' => true,
+            'responsive' => true,
+            'autoWidth' => false,
+//            'ajax' => route('users.getUsers'),
+            'initComplete' => 'function(settings, json) {
+            }',
         ];
     }
 
