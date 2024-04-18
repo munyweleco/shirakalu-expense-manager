@@ -20,16 +20,20 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 
 Auth::routes();
 
-Route::get('/users', [UsersController::class, 'index'])->name('users.index');
+Route::prefix('users')->middleware(['auth'])->group(function () {
+    // Index route
+    Route::get('/', [UsersController::class, 'index'])->name('users.index');
 
-// View User Route
-Route::get('users/{user}', [UsersController::class, 'show'])->name('users.show');
+    // Show route
+    Route::get('/{user}', [UsersController::class, 'show'])->name('users.show');
 
-// Edit User Route
-Route::get('users/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
-Route::put('users/{user}', [UsersController::class, 'update'])->name('users.update');
+    // Edit route
+    Route::get('/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
+    Route::put('/{user}', [UsersController::class, 'update'])->name('users.update');
 
-// Delete User Route
-Route::delete('users/{user}/delete', [UsersController::class, 'destroy'])->name('users.destroy');
+    // Delete route
+    Route::delete('/{user}/delete', [UsersController::class, 'destroy'])->name('users.destroy');
+});
+
 
 
