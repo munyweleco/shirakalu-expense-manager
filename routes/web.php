@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\UsersController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+Auth::routes();
+
+Route::get('/users', [UsersController::class, 'index'])->name('users.index');
+
+// View User Route
+Route::get('users/{user}', [UsersController::class, 'show'])->name('users.show');
+
+// Edit User Route
+Route::get('users/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
+Route::put('users/{user}', [UsersController::class, 'update'])->name('users.update');
+
+// Delete User Route
+Route::delete('users/{user}', [UsersController::class, 'destroy'])->name('users.destroy');
+
+
