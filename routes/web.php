@@ -1,30 +1,41 @@
 <?php
 
 use App\Http\Controllers\StaffTypeController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [StaffTypeController::class, 'index'])->name('staff-type.index');
-Route::get('/staff-type/create', [StaffTypeController::class, 'create'])->name('staff-type.create');
-Route::post('/staff-type', [StaffTypeController::class, 'store'])->name('staff-type.store');
-Route::get('/staff-type/{staff}/show', [StaffTypeController::class, 'show'])->name('staff-type.show');
-Route::get('/staff-type/{staff}/edit', [StaffTypeController::class, 'edit'])->name('staff-type.edit');
-Route::put('/staff-type/{staff}', [StaffTypeController::class, 'update'])->name('staff-type.update');
-Route::delete('/staff-type/{staff}', [StaffTypeController::class, 'destroy'])->name('staff-type.destroy');
-
-
-//// returns the form for adding a post
-//Route::get('/posts/create', PostController::class . '@create')->name('posts.create');
-//// adds a post to the database
-//Route::post('/posts', PostController::class .'@store')->name('posts.store');
-//// returns a page that shows a full post
-//Route::get('/posts/{post}', PostController::class .'@show')->name('posts.show');
-//// returns the form for editing a post
-//Route::get('/posts/{post}/edit', PostController::class .'@edit')->name('posts.edit');
-//// updates a post
-//Route::put('/posts/{post}', PostController::class .'@update')->name('posts.update');
-//// deletes a post
-//Route::delete('/posts/{post}', PostController::class .'@destroy')->name('posts.destroy');
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::prefix('staff-type')->middleware(['auth'])->group(function () {
+    Route::get('/', [StaffTypeController::class, 'index'])->name('staff-type.index');
+
+    Route::get('create', [StaffTypeController::class, 'create'])->name('staff-type.create');
+    Route::post('/', [StaffTypeController::class, 'store'])->name('staff-type.store');
+
+    Route::get('/{staff}', [StaffTypeController::class, 'show'])->name('staff-type.show');
+
+    Route::get('/{staff}/edit', [StaffTypeController::class, 'edit'])->name('staff-type.edit');
+    Route::put('/{staff}', [StaffTypeController::class, 'update'])->name('staff-type.update');
+
+    Route::delete('/{staff}/delete', [StaffTypeController::class, 'destroy'])->name('staff-type.destroy');
+
+
+});
+
+Route::prefix('users')->middleware(['auth'])->group(function () {
+    // Index route
+    Route::get('/', [UsersController::class, 'index'])->name('users.index');
+
+    // Show route
+    Route::get('/{user}', [UsersController::class, 'show'])->name('users.show');
+
+    // Edit route
+    Route::get('/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
+    Route::put('/{user}', [UsersController::class, 'update'])->name('users.update');
+
+    // Delete route
+    Route::delete('/{user}/delete', [UsersController::class, 'destroy'])->name('users.destroy');
+});
