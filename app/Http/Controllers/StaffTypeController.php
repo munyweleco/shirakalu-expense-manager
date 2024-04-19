@@ -10,7 +10,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\VarDumper\VarDumper;
 
 class StaffTypeController extends Controller
 {
@@ -19,10 +18,7 @@ class StaffTypeController extends Controller
      */
     public function index(StaffTypeDataTable $dataTable)
     {
-//        $staffList = StaffType::all();
-
         return $dataTable->render('staff-type.index');
-//        return view('staff-type.index', compact('staffList'));
     }
 
     /**
