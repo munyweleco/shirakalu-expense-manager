@@ -33,9 +33,6 @@ class UsersDataTable extends DataTable
                             <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                         </form>';
             })
-//            ->addColumn('action', function ($user) {
-//                return '<a href="/users/'.$user->id.'/edit" class="btn btn-danger btn-sm">Edit</a>';
-//            })
             ->editColumn('created_at', function ($user) {
                 return $user->created_at->format('Y-m-d H:i:s'); // Adjust the date format as needed
             })
