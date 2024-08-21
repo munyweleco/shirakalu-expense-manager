@@ -1,8 +1,9 @@
-<?php
+<?php /** @noinspection ALL */
 
 namespace app\controllers;
 
 use app\common\controllers\BaseWebController;
+use app\models\ChangePasswordForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Json;
@@ -42,14 +43,35 @@ class SiteController extends BaseWebController
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-
-            return $model->userNeedsPasswordChange() ? $this->redirect(['change-password']) : $this->goBack();
+            return $this->goBack();
         }
 
         $model->password = '';
         return $this->render('login', [
             'model' => $model,
         ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function actionChangePassword(): string
+    {
+        $this->view->title = "Change Password";
+        $model = new ChangePasswordForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if ($model->changePassword()) {
+                Yii::$app->session->setFlash('success', 'Password changed successfully.');
+                return $this->goHome();
+            }
+            Yii::$app->session->setFlash('error', 'Failed to change password.');
+        }
+
+        $model->currentPassword = '';
+        $model->newPassword = '';
+        $model->confirmPassword = '';
+        return $this->render('change-password', ['model' => $model]);
     }
 
     /**

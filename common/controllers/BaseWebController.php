@@ -4,15 +4,7 @@
 namespace app\common\controllers;
 
 
-use app\common\components\MyAccessControl;
-use app\models\City;
-use app\models\Employee;
-use app\models\Sale;
-use app\models\SaleItem;
-use app\models\ShopIssuanceItem;
-use app\models\StockOrder;
-use libphonenumber\NumberParseException;
-use libphonenumber\PhoneNumberUtil;
+use app\components\PasswordChangeBehavior;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -34,26 +26,33 @@ class BaseWebController extends Controller
      */
     public function behaviors(): array
     {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
-                'except' => ['login', 'error', 'captcha'], // Actions accessible without login
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'], // Allow authenticated users
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'logout' => ['post'],
+        $behaviors = parent::behaviors();
+
+        $behaviors['access'] = [
+            'class' => AccessControl::class,
+            'except' => ['login', 'error', 'captcha'], // Actions accessible without login
+            'rules' => [
+                [
+                    'allow' => true,
+                    'roles' => ['@'], // Allow authenticated users
                 ],
             ],
         ];
-    }
 
+        $behaviors['passwordChange'] = [
+            'class' => PasswordChangeBehavior::class,
+            'except' => ['login', 'change-password','error'], //Actions accessible
+        ];
+
+        $behaviors['verbs'] = [
+            'class' => VerbFilter::class,
+            'actions' => [
+                'logout' => ['post'],
+            ],
+        ];
+
+        return $behaviors;
+    }
 
     /**
      * @inheritdoc

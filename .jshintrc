@@ -1,0 +1,16 @@
+{
+  "browser": true,
+  "esversion": 6,
+  "undef": true,
+  "unused": true,
+  "maxlen": 110,
+  "globals": {
+    "jQuery": true,
+    "$": true
+  },
+  "quotmark": "single",
+  "curly": true,
+  "eqeqeq": true,
+  "node": false,
+  "camelcase": true
+}

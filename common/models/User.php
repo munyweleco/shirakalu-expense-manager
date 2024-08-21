@@ -96,4 +96,14 @@ class User extends BaseUser implements IdentityInterface
         return \Yii::$app->security->validatePassword($password, $this->password_hash);
     }
 
+
+    /**
+     * Checks if the user needs to change their password.
+     *
+     * @return bool
+     */
+    public function needsPasswordChange(): bool
+    {
+        return $this->change_password;
+    }
 }

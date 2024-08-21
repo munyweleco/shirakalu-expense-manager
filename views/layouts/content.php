@@ -2,6 +2,7 @@
 /* @var $content string */
 
 use yii\bootstrap4\Breadcrumbs;
+
 ?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -20,8 +21,7 @@ use yii\bootstrap4\Breadcrumbs;
                     </h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
-                    <?php
-                    echo Breadcrumbs::widget([
+                    <?= Breadcrumbs::widget([
                         'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
                         'options' => [
                             'class' => 'breadcrumb float-sm-right'
@@ -35,6 +35,7 @@ use yii\bootstrap4\Breadcrumbs;
     <!-- /.content-header -->
 
     <!-- Main content -->
+    <?= \app\widgets\Alert::widget() ?>
     <div class="content">
         <?= $content ?><!-- /.container-fluid -->
     </div>

@@ -15,7 +15,7 @@ class Yii {
     /**
      * @var \yii\web\Application|\yii\console\Application|__Application
      */
-    public static $app;
+    public static \yii\console\Application|__Application|\yii\web\Application $app;
 }
 
 /**
@@ -27,7 +27,7 @@ class __Application {
 }
 
 /**
- * @property app\models\User $identity
+ * @property app\common\models\User $identity
  */
 class __WebUser {
 }
