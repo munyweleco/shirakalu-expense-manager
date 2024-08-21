@@ -15,10 +15,14 @@ class m240821_074257_seed_default_user extends Migration
      */
     public function safeUp(): void
     {
+        $adminUser = \yii\helpers\ArrayHelper::getValue($_ENV, 'ADMIN_USER', 'admin');
+        $adminPass = \yii\helpers\ArrayHelper::getValue($_ENV, 'ADMIN_PASS', 'admin');
+
         $user = new User();
-        $user->username = 'admin';
-        $user->email = 'admin@admin.com';
-        $user->setPassword('admin');
+        $user->id = 1;
+        $user->username = $adminUser;
+        $user->email = 'admin@shirakalu.co.ke';
+        $user->setPassword(password: $adminPass);
         $user->generateAuthKey();
         $user->change_password = 1;
 
