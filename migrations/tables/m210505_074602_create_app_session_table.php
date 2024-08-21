@@ -17,7 +17,7 @@ class m210505_074602_create_app_session_table extends \app\common\migration\Base
 
         $this->createTable($this->tableName, [
             'id' => $this->char(80),
-            'user_id' => $this->bigInteger(),
+            'user_id' => $this->bigInteger(11),
             'username' => $this->string(20),
             'ip' => $this->string(50),
             'expire' => $this->integer(11),

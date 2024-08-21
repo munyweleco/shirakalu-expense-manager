@@ -14,12 +14,6 @@ use Yii;
  * Class BaseMigration
  * @package app\common\migration
  *
- * @property string $tableName
- * @property array $tableOptions
- * @property array $excludedTables
- * @property-read string[] $tables
- * @property-read array $fullTables
- * @property string $filePath
  */
 class BaseMigration extends \yii\db\Migration
 {
@@ -30,11 +24,11 @@ class BaseMigration extends \yii\db\Migration
      */
     public bool $addTimestamps = false;
 
-    public string $tableName;
-    public string $refTable;
+    public string $tableName = '';
+    public string $refTable = '';
 
-    public string $fkName;
-    public string $idxName;
+    public string $fkName = '';
+    public string $idxName = '';
 
     public string $filePath;
 

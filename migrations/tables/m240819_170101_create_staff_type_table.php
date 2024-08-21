@@ -11,14 +11,15 @@ class m240819_170101_create_staff_type_table extends \app\common\migration\BaseM
     {
 
         $this->createTable($this->tableName, [
-            'id' => $this->bigPrimaryKey(),
+            'id' => $this->bigPrimaryKey(11),
             'staff_type' => $this->string(20)->notNull(),
             'description' => $this->text()->notNull(),
             'active' => $this->boolean()->notNull()->defaultValue(1)
         ], $this->tableOptions);
-
-        $this->insert($this->tableName, ['staff_type' => 'OPERATOR', 'description' => 'Machine operator']);
-        $this->insert($this->tableName, ['staff_type' => 'TURNBOY', 'description' => 'Machine operator assistant']);
+        $this->batchInsert($this->tableName, ['id', 'staff_type', 'description'], [
+            [1, 'OPERATOR', 'Machine operator'],
+            [2, 'TURNBOY', 'Machine operator assistant'],
+        ]);
     }
 
     public function down()
