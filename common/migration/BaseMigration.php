@@ -14,6 +14,12 @@ use Yii;
  * Class BaseMigration
  * @package app\common\migration
  *
+ * @property string $tableName
+ * @property array $tableOptions
+ * @property array $excludedTables
+ * @property-read string[] $tables
+ * @property-read array $fullTables
+ * @property string $filePath
  */
 class BaseMigration extends \yii\db\Migration
 {
@@ -24,11 +30,11 @@ class BaseMigration extends \yii\db\Migration
      */
     public bool $addTimestamps = false;
 
-    public string $tableName = '';
-    public string $refTable = '';
+    public string $tableName;
+    public string $refTable;
 
-    public string $fkName = '';
-    public string $idxName = '';
+    public string $fkName;
+    public string $idxName;
 
     public string $filePath;
 
@@ -58,15 +64,11 @@ class BaseMigration extends \yii\db\Migration
             $options = $this->tableOptions;
         }
         if ($this->addTimestamps) {
-//            $this->addColumn('disease_reports', 'created_at', $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP')->notNull());
-//            $this->addColumn('disease_reports', 'updated_at', $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')->notNull());
-
             $columns['created_at'] = $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP')->notNull();
             $columns['updated_at'] = $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')->notNull();
         }
         parent::createTable($table, $columns, $options);
     }
-
 
     /**
      * @return void

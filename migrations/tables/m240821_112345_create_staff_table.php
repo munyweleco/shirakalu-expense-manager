@@ -18,7 +18,7 @@ class m240821_112345_create_staff_table extends \app\common\migration\BaseMigrat
     public function safeUp(): void
     {
         $this->createTable(table: $this->tableName, columns: [
-            'id' => $this->primaryKey(11),
+            'id' => $this->bigPrimaryKey(11),
             'staff_name' => $this->string(100)->notNull(),
             'staff_role_id' => $this->bigInteger(11)->notNull(),
         ], options: $this->tableOptions);

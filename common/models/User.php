@@ -106,4 +106,13 @@ class User extends BaseUser implements IdentityInterface
     {
         return $this->change_password;
     }
+
+    /**
+     * Generates "remember me" authentication key
+     * @throws \yii\base\Exception
+     */
+    public function generateAuthKey(): void
+    {
+        $this->auth_key = \Yii::$app->security->generateRandomString();
+    }
 }
