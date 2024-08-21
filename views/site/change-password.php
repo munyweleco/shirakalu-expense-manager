@@ -40,18 +40,31 @@ $this->registerJsFile('@web/js/password-toggle.js', ['depends' => [\yii\web\Jque
                 <?= $form->field($model, 'newPassword', [
                     'addon' => [
                         'append' => [
-                            'content' => '<button type="button" class="btn btn-outline-secondary" id="toggleNewPassword"><i id="newPasswordIcon" class="fa fa-eye"></i></button>',
+                            'content' => '<button type="button" class="btn btn-outline-primary" id="toggleNewPassword"><i class="fa fa-eye"></i></button>',
                             'asButton' => true,
                         ],
                     ],
-                    'template' => "{input}\n{error}",
                     'inputOptions' => [
                         'id' => 'newPassword',
                         'class' => 'form-control',
                         'placeholder' => 'New Password'
                     ]
                 ])->passwordInput() ?>
-                <?= $form->field($model, 'confirmPassword')->passwordInput() ?>
+
+                <?= $form->field($model, 'confirmPassword', [
+                    'addon' => [
+                        'append' => [
+                            'content' => '<button type="button" class="btn btn-outline-primary" id="toggleConfirmPassword"><i class="fa fa-eye"></i></button>',
+                            'asButton' => true,
+                        ],
+                    ],
+                    'inputOptions' => [
+                        'id' => 'confirmPassword',
+                        'class' => 'form-control',
+                        'placeholder' => 'Confirm Password'
+                    ]
+                ])->passwordInput() ?>
+
             </div>
             <div class="card-footer">
                 <div class="form-group">

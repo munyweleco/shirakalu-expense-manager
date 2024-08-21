@@ -55,7 +55,7 @@ class SiteController extends BaseWebController
     /**
      * @return string
      */
-    public function actionChangePassword(): string
+    public function actionChangePassword(): Response|string
     {
         $this->view->title = "Change Password";
         $model = new ChangePasswordForm();
@@ -84,33 +84,5 @@ class SiteController extends BaseWebController
         Yii::$app->user->logout();
 
         return $this->goHome();
-    }
-
-    /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
     }
 }
