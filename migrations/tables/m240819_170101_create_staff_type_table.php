@@ -12,12 +12,13 @@ class m240819_170101_create_staff_type_table extends \app\common\migration\BaseM
 
         $this->createTable($this->tableName, [
             'id' => $this->bigPrimaryKey(),
-            'name' => $this->string(20)->notNull(),
+            'staff_type' => $this->string(20)->notNull(),
             'description' => $this->text()->notNull(),
-            'active' => $this->boolean()->notNull()->defaultValue(1),
-            'created_at' => $this->timestamp(),
-            'updated_at' => $this->timestamp(),
+            'active' => $this->boolean()->notNull()->defaultValue(1)
         ], $this->tableOptions);
+
+        $this->insert($this->tableName, ['staff_type' => 'OPERATOR', 'description' => 'Machine operator']);
+        $this->insert($this->tableName, ['staff_type' => 'TURNBOY', 'description' => 'Machine operator assistant']);
     }
 
     public function down()

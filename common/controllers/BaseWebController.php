@@ -14,6 +14,7 @@ use app\models\StockOrder;
 use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberUtil;
 use Yii;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
 use yii\helpers\Json;
@@ -31,25 +32,28 @@ class BaseWebController extends Controller
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'access' => [
-                'class' => MyAccessControl::class,
-                'allowActions' => ['request-password-reset', 'login',]
-
+                'class' => AccessControl::class,
+                'except' => ['login', 'error', 'captcha'], // Actions accessible without login
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'], // Allow authenticated users
+                    ],
+                ],
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
                     'logout' => ['post'],
-                    'delete' => ['post'],
-                    'bulk-delete' => ['post'],
-                    'validate-sale' => ['post'],
                 ],
             ],
         ];
     }
+
 
     /**
      * @inheritdoc

@@ -9,5 +9,5 @@ module.exports = {
         'index.php'
     ],
     notify: false, // Set to true if you want to see BrowserSync notifications
-    open: false    // automatically open the browser
+    open: true    // automatically open the browser
 };
