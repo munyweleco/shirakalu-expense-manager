@@ -10,7 +10,6 @@ use yii\base\Model;
  * LoginForm is the model behind the login form.
  *
  * @property-read User|null $user
- *
  */
 class LoginForm extends Model
 {
@@ -18,8 +17,7 @@ class LoginForm extends Model
     public ?string $password = null;
     public bool $rememberMe = true;
 
-    private User|null $_user = null;
-
+    private ?User $_user = null;
 
     /**
      * @return array the validation rules.
@@ -38,7 +36,7 @@ class LoginForm extends Model
 
     /**
      * Validates the password.
-     * This method serves as the inline validation for password.
+     * This method serves as the inline validation for the password.
      *
      * @param string $attribute the attribute currently being validated
      * @param array|null $params the additional name-value pairs given in the rule
@@ -63,6 +61,7 @@ class LoginForm extends Model
         if ($this->validate()) {
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         }
+
         return false;
     }
 
@@ -73,10 +72,20 @@ class LoginForm extends Model
      */
     public function getUser(): ?User
     {
-        if ($this->_user === false) {
+        if ($this->_user === null) {
             $this->_user = User::findByUsername($this->username);
         }
 
         return $this->_user;
+    }
+
+    /**
+     * Checks if the user needs to change their password.
+     *
+     * @return bool
+     */
+    public function userNeedsPasswordChange(): bool
+    {
+        return $this->_user->change_password;
     }
 }

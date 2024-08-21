@@ -3,6 +3,7 @@
 /* @var $this yii\web\View */
 /* @var $name string */
 /* @var $message string */
+
 /* @var $exception Exception */
 
 use yii\helpers\Html;
@@ -10,31 +11,22 @@ use yii\helpers\Html;
 $this->title = $name;
 $this->params['breadcrumbs'] = [['label' => $this->title]];
 ?>
-<div class="error-page">
-    <div class="error-content" style="margin-left: auto;">
-        <h3><i class="fas fa-exclamation-triangle text-danger"></i> <?= Html::encode($name) ?></h3>
-
-        <p>
-            <?= nl2br(Html::encode($message)) ?>
-        </p>
-
-        <p>
-            The above error occurred while the Web server was processing your request.
-            Please contact us if you think this is a server error. Thank you.
-            Meanwhile, you may <?= Html::a('return to dashboard', Yii::$app->homeUrl); ?>
-            or try using the search form.
-        </p>
-
-        <form class="search-form" style="margin-right: 190px;">
-            <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="Search">
-
-                <div class="input-group-append">
-                    <button type="submit" name="submit" class="btn btn-danger"><i class="fas fa-search"></i>
-                    </button>
-                </div>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card text-center">
+            <div class="card-header bg-danger text-white">
+                <h2><i class="fas fa-exclamation-triangle"></i> <?= Html::encode($name) ?></h2>
             </div>
-        </form>
+            <div class="card-body">
+                <h4><?= nl2br(Html::encode($message)) ?></h4>
+                <p>
+                    The above error occurred while the Web server was processing your request.
+                    Please contact us if you think this is a server error. Thank you.
+                </p>
+            </div>
+            <div class="card-footer text-muted">
+                <?= Html::a('return to dashboard', Yii::$app->homeUrl, ['class' => 'btn btn-primary']); ?>
+            </div>
+        </div>
     </div>
 </div>
-

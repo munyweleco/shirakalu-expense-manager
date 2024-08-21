@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\common\controllers\BaseWebController;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -41,7 +42,8 @@ class SiteController extends BaseWebController
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+
+            return $model->userNeedsPasswordChange() ? $this->redirect(['change-password']) : $this->goBack();
         }
 
         $model->password = '';

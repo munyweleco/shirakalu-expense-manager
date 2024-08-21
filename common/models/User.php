@@ -4,6 +4,7 @@ namespace app\common\models;
 
 use app\models\User as BaseUser;
 use Faker\Provider\Base;
+use Symfony\Component\VarDumper\Cloner\VarCloner;
 use yii\base\Exception;
 use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
@@ -92,7 +93,7 @@ class User extends BaseUser implements IdentityInterface
      */
     public function validatePassword(string $password): bool
     {
-        return $this->password_hash === $password;
+        return \Yii::$app->security->validatePassword($password, $this->password_hash);
     }
 
 }
