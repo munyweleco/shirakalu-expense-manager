@@ -2,12 +2,12 @@
 
 namespace app\models;
 
-use \app\models\base\User as BaseUser;
+use \app\models\base\Operation as BaseOperation;
 
 /**
- * This is the model class for table "users".
+ * This is the model class for table "operations".
  */
-class User extends BaseUser
+class Operation extends BaseOperation
 {
     /**
      * @inheritdoc

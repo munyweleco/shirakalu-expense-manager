@@ -6,16 +6,15 @@ use Yii;
 use app\common\models\BaseModel;
 
 /**
-* This is the base model class for table "{{%staff_type}}".
+* This is the base model class for table "{{%staff}}".
 *
 * @property integer $id
-* @property string $staff_type
-* @property string $description
-* @property boolean $active
+* @property string $staff_name
+* @property integer $staff_role_id
 * @property string $created_at
 * @property string $updated_at
 */
-class StaffType extends BaseModel
+class Staff extends BaseModel
 {
 
     /**
@@ -23,7 +22,7 @@ class StaffType extends BaseModel
     */
     public static function tableName()
     {
-        return '{{%staff_type}}';
+        return '{{%staff}}';
     }
 
     /**
@@ -32,11 +31,10 @@ class StaffType extends BaseModel
     public function rules()
     {
         return [
-            [['staff_type', 'description'], 'required'],
-            [['description'], 'string'],
-            [['active'], 'boolean'],
+            [['staff_name', 'staff_role_id'], 'required'],
+            [['staff_role_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['staff_type'], 'string', 'max' => 20]
+            [['staff_name'], 'string', 'max' => 100]
         ];
     }
 
@@ -47,9 +45,8 @@ class StaffType extends BaseModel
     {
         return [
             'id' => 'ID',
-            'staff_type' => 'Staff Type',
-            'description' => 'Description',
-            'active' => 'Active',
+            'staff_name' => 'Staff Name',
+            'staff_role_id' => 'Staff Role ID',
         ];
     }
 

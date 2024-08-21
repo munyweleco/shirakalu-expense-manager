@@ -2,12 +2,12 @@
 
 namespace app\models;
 
-use \app\models\base\User as BaseUser;
+use \app\models\base\Staff as BaseStaff;
 
 /**
- * This is the model class for table "users".
+ * This is the model class for table "staff".
  */
-class User extends BaseUser
+class Staff extends BaseStaff
 {
     /**
      * @inheritdoc

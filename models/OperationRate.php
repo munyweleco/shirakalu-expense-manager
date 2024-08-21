@@ -2,12 +2,12 @@
 
 namespace app\models;
 
-use \app\models\base\User as BaseUser;
+use \app\models\base\OperationRate as BaseOperationRate;
 
 /**
- * This is the model class for table "users".
+ * This is the model class for table "operation_rates".
  */
-class User extends BaseUser
+class OperationRate extends BaseOperationRate
 {
     /**
      * @inheritdoc
