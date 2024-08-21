@@ -61,6 +61,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        $this->view->title = "Shirakalu resort manager";
         return $this->render('index');
     }
 

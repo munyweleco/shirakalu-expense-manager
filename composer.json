@@ -38,13 +38,25 @@
         "codeception/verify": "^3.0 || ^2.2",
         "symfony/browser-kit": "^6.0 || >=2.7 <=4.2.4"
     },
+    "provide": {
+        "bower-asset/jquery": ">=1.11.0",
+        "bower-asset/inputmask": ">=3.2.0",
+        "bower-asset/punycode": ">=1.3.0",
+        "bower-asset/yii2-pjax": ">=2.0.0",
+        "bower-asset/bootstrap": ">=3.0.0",
+        "bower-asset/fontawesome": ">=4.0.0"
+    },
     "config": {
         "allow-plugins": {
             "yiisoft/yii2-composer" : true
         },
         "process-timeout": 1800,
         "fxp-asset": {
-            "enabled": false
+            "enabled": false,
+            "installer-paths": {
+                "npm-asset-library": "node_modules",
+                "bower-asset-library": "node_modules"
+            }
         }
     },
     "scripts": {
