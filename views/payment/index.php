@@ -1,6 +1,7 @@
 <?php
 
 /* @var $this yii\web\View */
+
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 use yii\helpers\Html;
@@ -22,36 +23,37 @@ $this->registerJs($search);
     <p>
         <?= Html::a('Create Payment', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-<?php 
+    <?php
     $gridColumn = [
         ['class' => 'yii\grid\SerialColumn'],
         ['attribute' => 'id', 'visible' => false],
         [
-                'attribute' => 'staff_id',
-                'label' => 'Staff',
-                'value' => function($model){
-                    return $model->staff->id;
-                },
-                'filterType' => GridView::FILTER_SELECT2,
-                'filter' => \yii\helpers\ArrayHelper::map(\app\models\Staff::find()->asArray()->all(), 'id', 'id'),
-                'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true],
-                ],
-                'filterInputOptions' => ['placeholder' => 'Staff', 'id' => 'grid--staff_id']
+            'attribute' => 'staff_id',
+            'label' => 'Staff',
+            'value' => function ($model) {
+                /* @var $model \app\models\Payment */
+                return $model->staff->id;
+            },
+            'filterType' => GridView::FILTER_SELECT2,
+            'filter' => \yii\helpers\ArrayHelper::map(\app\models\Staff::find()->asArray()->all(), 'id', 'id'),
+            'filterWidgetOptions' => [
+                'pluginOptions' => ['allowClear' => true],
             ],
+            'filterInputOptions' => ['placeholder' => 'Staff', 'id' => 'grid--staff_id']
+        ],
         [
-                'attribute' => 'operation_id',
-                'label' => 'Operation',
-                'value' => function($model){
-                    return $model->operation->name;
-                },
-                'filterType' => GridView::FILTER_SELECT2,
-                'filter' => \yii\helpers\ArrayHelper::map(\app\models\Operation::find()->asArray()->all(), 'id', 'name'),
-                'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true],
-                ],
-                'filterInputOptions' => ['placeholder' => 'Operations', 'id' => 'grid--operation_id']
+            'attribute' => 'operation_id',
+            'label' => 'Operation',
+            'value' => function ($model) {
+                return $model->operation->name;
+            },
+            'filterType' => GridView::FILTER_SELECT2,
+            'filter' => \yii\helpers\ArrayHelper::map(\app\models\Operation::find()->asArray()->all(), 'id', 'name'),
+            'filterWidgetOptions' => [
+                'pluginOptions' => ['allowClear' => true],
             ],
+            'filterInputOptions' => ['placeholder' => 'Operations', 'id' => 'grid--operation_id']
+        ],
         'rate',
         'acres',
         'amount',
@@ -59,7 +61,7 @@ $this->registerJs($search);
         [
             'class' => 'yii\grid\ActionColumn',
         ],
-    ]; 
+    ];
     ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -89,7 +91,7 @@ $this->registerJs($search);
                 'exportConfig' => [
                     ExportMenu::FORMAT_PDF => false
                 ]
-            ]) ,
+            ]),
         ],
     ]); ?>
 

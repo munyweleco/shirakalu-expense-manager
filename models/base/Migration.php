@@ -3,40 +3,39 @@
 namespace app\models\base;
 
 use Yii;
-use app\common\models\BaseModel;
 
 /**
-* This is the base model class for table "{{%migration}}".
-*
-* @property string $version
-* @property integer|null $apply_time
-*/
-class Migration extends BaseModel
+ * This is the model class for table "{{%migration}}".
+ *
+ * @property string $version
+ * @property int|null $apply_time
+ */
+class Migration extends \app\common\models\BaseModel
 {
-
     /**
-    * @inheritdoc
-    */
+     * {@inheritdoc}
+     */
     public static function tableName()
     {
         return '{{%migration}}';
     }
 
     /**
-    * @inheritdoc
-    */
+     * {@inheritdoc}
+     */
     public function rules()
     {
         return [
             [['version'], 'required'],
             [['apply_time'], 'integer'],
-            [['version'], 'string', 'max' => 180]
+            [['version'], 'string', 'max' => 180],
+            [['version'], 'unique'],
         ];
     }
 
     /**
-    * @inheritdoc
-    */
+     * {@inheritdoc}
+     */
     public function attributeLabels()
     {
         return [
@@ -44,5 +43,4 @@ class Migration extends BaseModel
             'apply_time' => 'Apply Time',
         ];
     }
-
 }

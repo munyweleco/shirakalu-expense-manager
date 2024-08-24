@@ -1,11 +1,17 @@
 <?php
 
+use app\models\Operation;
+use app\models\Staff;
+use kartik\depdrop\DepDrop;
+use kartik\widgets\Select2;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\widgets\Pjax;
+use kartik\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Payment */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $form kartik\widgets\ActiveForm */
 
 ?>
 
@@ -15,31 +21,47 @@ use yii\widgets\ActiveForm;
 
     <?= $form->errorSummary($model); ?>
 
-    <?= $form->field($model, 'id', ['template' => '{input}'])->textInput(['style' => 'display:none']); ?>
-
-    <?= $form->field($model, 'staff_id')->widget(\kartik\widgets\Select2::classname(), [
-        'data' => \yii\helpers\ArrayHelper::map(\app\models\Staff::find()->orderBy('id')->asArray()->all(), 'id', 'id'),
-        'options' => ['placeholder' => 'Choose Staff'],
-        'pluginOptions' => [
-            'allowClear' => true
-        ],
-    ]); ?>
-
-    <?= $form->field($model, 'operation_id')->widget(\kartik\widgets\Select2::classname(), [
-        'data' => \yii\helpers\ArrayHelper::map(\app\models\Operation::find()->orderBy('id')->asArray()->all(), 'id', 'name'),
-        'options' => ['placeholder' => 'Choose Operations'],
-        'pluginOptions' => [
-            'allowClear' => true
-        ],
-    ]); ?>
-
-    <?= $form->field($model, 'rate')->textInput(['maxlength' => true, 'placeholder' => 'Rate']) ?>
-
     <?= $form->field($model, 'acres')->textInput(['maxlength' => true, 'placeholder' => 'Acres']) ?>
 
-    <?= $form->field($model, 'amount')->textInput(['maxlength' => true, 'placeholder' => 'Amount']) ?>
 
-    <?= $form->field($model, 'payment_date')->widget(\kartik\datecontrol\DateControl::classname(), [
+    <?= $form->field($model, 'staff_id')->widget(Select2::class, [
+        'data' => Staff::loadActiveStaff(),
+        'options' => [
+            'id' => 'staff-id',
+            'disabled' => !$model->isNewRecord,
+        ],
+        'pluginOptions' => [
+            'placeholder' => 'Choose Staff',
+            'allowClear' => true
+        ],
+    ]); ?>
+
+
+    <?= $form->field($model, 'operation_id')->widget(DepDrop::class, [
+        'type' => DepDrop::TYPE_SELECT2,
+        'options' => ['id' => 'operation-id'],
+        'data' => $model->isNewRecord ? [] : [$model->operation_id => $model->operation->name],
+        'pluginOptions' => [
+
+            'initialize' => !$model->isNewRecord,
+            'depends' => ['staff-id'],
+            'placeholder' => 'Choose operations',
+            'url' => yii\helpers\Url::to(['payment/get-operations'])
+        ],
+    ]); ?>
+
+    <?= $form->field($model, 'use_custom_rate')->checkbox(['id' => 'use-custom-rate']) ?>
+
+    <!-- This is the text field where the rate value will be populated -->
+    <?= $form->field($model, 'rate')->textInput([
+        'placeholder' => 'Payment rate',
+        'readonly' => true,
+    ]) ?>
+
+
+    <?= $form->field($model, 'amount')->textInput(['readonly' => true, 'placeholder' => 'Amount']) ?>
+
+    <?= $form->field($model, 'payment_date')->widget(\kartik\datecontrol\DateControl::class, [
         'type' => \kartik\datecontrol\DateControl::FORMAT_DATE,
         'saveFormat' => 'php:Y-m-d',
         'ajaxConversion' => true,
@@ -58,3 +80,7 @@ use yii\widgets\ActiveForm;
     <?php ActiveForm::end(); ?>
 
 </div>
+
+<?php
+$this->registerJsFile('@web/js/payment-form.js', ['depends' => [\yii\web\JqueryAsset::class]]);
+?>

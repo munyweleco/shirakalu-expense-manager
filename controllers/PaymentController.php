@@ -2,10 +2,15 @@
 
 namespace app\controllers;
 
+use app\models\Operation;
+use app\models\OperationRate;
+use app\models\Staff;
 use Yii;
 use app\models\Payment;
 use yii\data\ActiveDataProvider;
 use app\common\controllers\BaseWebController;
+use yii\helpers\ArrayHelper;
+use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -65,11 +70,13 @@ class PaymentController extends BaseWebController
 
         if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {
             return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
         }
+
+        $model->acres = 2;
+        return $this->render('create', [
+            'model' => $model,
+        ]);
+
     }
 
     /**
@@ -116,8 +123,59 @@ class PaymentController extends BaseWebController
     {
         if (($model = Payment::findOne($id)) !== null) {
             return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
         }
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+
+    /**
+     * @return yii\web\Response
+     */
+    public function actionGetOperations(): \yii\web\Response
+    {
+        $out = [];
+        if (isset($_POST['depdrop_parents'])) {
+            $ids = Yii::$app->request->post('depdrop_all_params');
+            $staff_id = ArrayHelper::getValue($ids, 'staff-id');
+            if ($staff_id !== null) {
+                $operations = Operation::find()
+                    ->orderBy('name')
+                    ->asArray()
+                    ->all();
+                foreach ($operations as $operation) {
+                    $out[] = ['id' => $operation['id'], 'name' => $operation['name']];
+                }
+                return $this->asJson(['output' => $out, 'selected' => '']);
+            }
+        }
+
+        return $this->asJson(['output' => '', 'selected' => '']);
+    }
+
+    /**
+     * @return yii\web\Response
+     * @throws BadRequestHttpException
+     */
+    public function actionGetRate(): \yii\web\Response
+    {
+        if (!Yii::$app->request->isAjax) {
+            throw new BadRequestHttpException('This action can only be accessed via AJAX.');
+        }
+
+        $operationId = Yii::$app->request->post('operation_id', 0);
+        $staffId = Yii::$app->request->post('staff_id', 0);
+
+        $staffRoles = Staff::find()->select('staff_role_id')->where(['id' => $staffId])->asArray();
+        /* @var $operationRate OperationRate */
+        $operationRate = OperationRate::find()
+            ->where(['operation_id' => $operationId, 'role_id' => $staffRoles])
+            ->orderBy(['effective_date' => SORT_DESC])
+            ->one();
+        if ($operationRate !== null) {
+            return $this->asJson(['rate' => $operationRate->rate]);
+        }
+
+
+        return $this->asJson(['rate' => 0]);
     }
 }

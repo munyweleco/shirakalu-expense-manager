@@ -3,7 +3,7 @@
   "esversion": 6,
   "undef": true,
   "unused": true,
-  "maxlen": 110,
+  "maxlen": 150,
   "globals": {
     "jQuery": true,
     "$": true
@@ -12,5 +12,5 @@
   "curly": true,
   "eqeqeq": true,
   "node": false,
-  "camelcase": true
+  "camelcase": false
 }

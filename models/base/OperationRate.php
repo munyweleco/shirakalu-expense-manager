@@ -3,35 +3,36 @@
 namespace app\models\base;
 
 use Yii;
-use app\common\models\BaseModel;
 
 /**
-* This is the base model class for table "{{%operation_rates}}".
-*
-* @property integer $id
-* @property integer $operation_id
-* @property integer $role_id
-* @property float $rate
-* @property string $effective_date
-* @property string $unit
-* @property string|null $description
-* @property string $created_at
-* @property string $updated_at
-*/
-class OperationRate extends BaseModel
+ * This is the model class for table "{{%operation_rates}}".
+ *
+ * @property int $id
+ * @property int $operation_id
+ * @property int $role_id
+ * @property float $rate
+ * @property string $effective_date
+ * @property string $unit
+ * @property string|null $description
+ * @property string $created_at
+ * @property string $updated_at
+ *
+ * @property Operation $operation
+ * @property StaffType $role
+ */
+class OperationRate extends \app\common\models\BaseModel
 {
-
     /**
-    * @inheritdoc
-    */
+     * {@inheritdoc}
+     */
     public static function tableName()
     {
         return '{{%operation_rates}}';
     }
 
     /**
-    * @inheritdoc
-    */
+     * {@inheritdoc}
+     */
     public function rules()
     {
         return [
@@ -40,13 +41,15 @@ class OperationRate extends BaseModel
             [['rate'], 'number'],
             [['effective_date', 'created_at', 'updated_at'], 'safe'],
             [['unit'], 'string', 'max' => 10],
-            [['description'], 'string', 'max' => 100]
+            [['description'], 'string', 'max' => 100],
+            [['operation_id'], 'exist', 'skipOnError' => true, 'targetClass' => Operation::class, 'targetAttribute' => ['operation_id' => 'id']],
+            [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => StaffType::class, 'targetAttribute' => ['role_id' => 'id']],
         ];
     }
 
     /**
-    * @inheritdoc
-    */
+     * {@inheritdoc}
+     */
     public function attributeLabels()
     {
         return [
@@ -57,7 +60,28 @@ class OperationRate extends BaseModel
             'effective_date' => 'Effective Date',
             'unit' => 'Unit',
             'description' => 'Description',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
         ];
     }
 
+    /**
+     * Gets query for [[Operation]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOperation()
+    {
+        return $this->hasOne(Operation::class, ['id' => 'operation_id']);
+    }
+
+    /**
+     * Gets query for [[Role]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRole()
+    {
+        return $this->hasOne(StaffType::class, ['id' => 'role_id']);
+    }
 }
