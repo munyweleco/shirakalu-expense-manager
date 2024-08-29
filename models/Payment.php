@@ -8,6 +8,7 @@ use yii\web\ForbiddenHttpException;
 /**
  * This is the model class for table "payments".
  * @property float $rate_value
+ * @property bool $use_custom_rate
  */
 class Payment extends BasePayment
 {

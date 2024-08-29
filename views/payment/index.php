@@ -1,6 +1,7 @@
 <?php
 
 /* @var $this yii\web\View */
+/* @var $searchModel app\models\search\PaymentSearch */
 
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
@@ -9,36 +10,27 @@ use kartik\export\ExportMenu;
 use kartik\grid\GridView;
 
 $this->params['breadcrumbs'][] = $this->title;
-$search = "$('.search-button').click(function(){
-	$('.search-form').toggle(1000);
-	return false;
-});";
-$this->registerJs($search);
 ?>
 <div class="payment-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
-        <?= Html::a('Create Payment', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Add Payment', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?php
     $gridColumn = [
-        ['class' => 'yii\grid\SerialColumn'],
-        ['attribute' => 'id', 'visible' => false],
+        ['class' => 'kartik\grid\SerialColumn'],
         [
             'attribute' => 'staff_id',
-            'label' => 'Staff',
             'value' => function ($model) {
                 /* @var $model \app\models\Payment */
-                return $model->staff->id;
+                return $model->staff->staff_name;
             },
             'filterType' => GridView::FILTER_SELECT2,
-            'filter' => \yii\helpers\ArrayHelper::map(\app\models\Staff::find()->asArray()->all(), 'id', 'id'),
+            'filter' => \app\models\Staff::loadActiveStaff(),
             'filterWidgetOptions' => [
                 'pluginOptions' => ['allowClear' => true],
             ],
-            'filterInputOptions' => ['placeholder' => 'Staff', 'id' => 'grid--staff_id']
+            'filterInputOptions' => ['placeholder' => 'Staff', 'id' => 'grid-staff_id']
         ],
         [
             'attribute' => 'operation_id',
@@ -47,23 +39,24 @@ $this->registerJs($search);
                 return $model->operation->name;
             },
             'filterType' => GridView::FILTER_SELECT2,
-            'filter' => \yii\helpers\ArrayHelper::map(\app\models\Operation::find()->asArray()->all(), 'id', 'name'),
+            'filter' => \app\models\Operation::loadOperations(),
             'filterWidgetOptions' => [
                 'pluginOptions' => ['allowClear' => true],
             ],
-            'filterInputOptions' => ['placeholder' => 'Operations', 'id' => 'grid--operation_id']
+            'filterInputOptions' => ['placeholder' => 'Operations', 'id' => 'grid-operation_id']
         ],
-        'rate',
-        'acres',
-        'amount',
-        'payment_date',
+        'rate:currency',
+        'acres:decimal',
+        'amount:currency',
+        'payment_date:date',
         [
-            'class' => 'yii\grid\ActionColumn',
+            'class' => 'kartik\grid\ActionColumn',
         ],
     ];
     ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
         'columns' => $gridColumn,
         'pjax' => true,
         'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-payment']],
@@ -72,26 +65,6 @@ $this->registerJs($search);
             'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
         ],
         'export' => false,
-        // your toolbar can include the additional full export menu
-        'toolbar' => [
-            '{export}',
-            ExportMenu::widget([
-                'dataProvider' => $dataProvider,
-                'columns' => $gridColumn,
-                'target' => ExportMenu::TARGET_BLANK,
-                'fontAwesome' => true,
-                'dropdownOptions' => [
-                    'label' => 'Full',
-                    'class' => 'btn btn-default',
-                    'itemsBefore' => [
-                        '<li class="dropdown-header">Export All Data</li>',
-                    ],
-                ],
-                'exportConfig' => [
-                    ExportMenu::FORMAT_PDF => false
-                ]
-            ]),
-        ],
     ]); ?>
 
 </div>

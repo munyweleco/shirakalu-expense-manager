@@ -1,10 +1,16 @@
 <?php
+Yii::setAlias('@logs', dirname(__DIR__) . '/logs');
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
+$cache = require_once(__DIR__ . '/cache.php');
+$session = require_once(__DIR__ . '/session.php');
+$log = require_once(__DIR__ . '/logger.php');
+
 
 $config = [
-    'id' => 'basic',
+    'id' => 'app',
+    'language' => 'en',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -25,9 +31,18 @@ $config = [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'W3vEAkc-dvnSLmd4gIZlS6gLngttIdE-',
         ],
-        'cache' => [
-            'class' => 'yii\caching\FileCache',
+        /* custom view template */
+        'view' => [
+            'theme' => [
+                'basePath' => '@app/themes/basic',
+                'baseUrl' => '@web/themes/basic',
+                'pathMap' => [
+                    '@app/views' => '@app/themes/basic',
+                ],
+            ],
         ],
+        'cache' => $cache,
+        'session' => $session,
         'user' => [
             'identityClass' => 'app\common\models\User',
             'enableAutoLogin' => true,
@@ -41,21 +56,23 @@ $config = [
             // send all mails to a file by default.
             'useFileTransport' => true,
         ],
-        'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
-            'targets' => [
-                [
-                    'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
-                ],
-            ],
+        'formatter' => [
+            //'class' => 'app\common\components\MyFormatter',
+            //'dateFormat' => 'MMM d, Y',
+            'decimalSeparator' => '.',
+            'thousandSeparator' => ',',
+            'currencyCode' => 'KES',
+            'defaultTimeZone' => 'Africa/Nairobi'
+            //'defaultTimeZone' OR 'timeZone' => 'Asia/Calcutta',
         ],
+        'log' => $log,
         'db' => $db,
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
                 '<controller>/<action:(update|delete|view)>/<id:\d+>' => '<controller>/<action>',
+                '<module>/<controller>/<action:(update|delete|view)>/<id:\d+>' => '<module>/<controller>/<action>',
             ],
         ],
 

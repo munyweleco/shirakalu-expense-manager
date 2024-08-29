@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Operation;
 use app\models\OperationRate;
+use app\models\search\PaymentSearch;
 use app\models\Staff;
 use Yii;
 use app\models\Payment;
@@ -24,15 +25,16 @@ class PaymentController extends BaseWebController
 
     /**
      * Lists all Payment models.
-     * @return mixed
+     * @return string
      */
-    public function actionIndex()
+    public function actionIndex(): string
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Payment::find(),
-        ]);
+        $this->view->title = 'Payment';
+        $searchModel = new PaymentSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
