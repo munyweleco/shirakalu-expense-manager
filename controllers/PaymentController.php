@@ -9,27 +9,18 @@ use Yii;
 use app\models\Payment;
 use yii\data\ActiveDataProvider;
 use app\common\controllers\BaseWebController;
+use yii\db\Exception;
 use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * PaymentController implements the CRUD actions for Payment model.
  */
 class PaymentController extends BaseWebController
 {
-    public function behaviors(): array
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'delete' => ['post'],
-                ],
-            ],
-        ];
-    }
 
     /**
      * Lists all Payment models.
@@ -49,13 +40,14 @@ class PaymentController extends BaseWebController
     /**
      * Displays a single Payment model.
      * @param integer $id
-     * @return mixed
+     * @return string
+     * @throws NotFoundHttpException
      */
-    public function actionView($id)
+    public function actionView($id): string
     {
         $model = $this->findModel($id);
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -64,7 +56,7 @@ class PaymentController extends BaseWebController
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate(): mixed
     {
         $model = new Payment();
 
@@ -83,19 +75,26 @@ class PaymentController extends BaseWebController
      * Updates an existing Payment model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
-     * @return mixed
+     * @return string|Response
+     * @throws NotFoundHttpException
+     * @throws Exception
      */
-    public function actionUpdate($id)
+    public function actionUpdate($id): string|Response
     {
         $model = $this->findModel($id);
 
-        if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {
+        if ($model->is_finalized) {
+            Yii::$app->session->setFlash('error', 'This payment has been finalized and cannot be edited.');
             return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
         }
+
+        if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {
+            Yii::$app->session->setFlash('success', 'Payment updated successfully.');
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -106,8 +105,13 @@ class PaymentController extends BaseWebController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->deleteWithRelated();
+        $model = $this->findModel($id);
 
+        if ($model->is_finalized) {
+            Yii::$app->session->setFlash('error', 'This payment has been finalized and cannot be deleted.');
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+        $model->deleteWithRelated();
         return $this->redirect(['index']);
     }
 
@@ -129,9 +133,9 @@ class PaymentController extends BaseWebController
 
 
     /**
-     * @return yii\web\Response
+     * @return Response
      */
-    public function actionGetOperations(): \yii\web\Response
+    public function actionGetOperations(): Response
     {
         $out = [];
         if (isset($_POST['depdrop_parents'])) {
@@ -153,10 +157,10 @@ class PaymentController extends BaseWebController
     }
 
     /**
-     * @return yii\web\Response
+     * @return Response
      * @throws BadRequestHttpException
      */
-    public function actionGetRate(): \yii\web\Response
+    public function actionGetRate(): Response
     {
         if (!Yii::$app->request->isAjax) {
             throw new BadRequestHttpException('This action can only be accessed via AJAX.');

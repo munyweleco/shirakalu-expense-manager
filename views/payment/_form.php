@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnhandledExceptionInspection */
 
 use app\models\Operation;
 use app\models\Staff;
@@ -13,6 +13,7 @@ use kartik\widgets\ActiveForm;
 /* @var $model app\models\Payment */
 /* @var $form kartik\widgets\ActiveForm */
 
+$disabled = !$model->isNewRecord && $model->is_finalized;
 ?>
 
 <div class="payment-form">
@@ -21,14 +22,12 @@ use kartik\widgets\ActiveForm;
 
     <?= $form->errorSummary($model); ?>
 
-    <?= $form->field($model, 'acres')->textInput(['maxlength' => true, 'placeholder' => 'Acres']) ?>
-
 
     <?= $form->field($model, 'staff_id')->widget(Select2::class, [
         'data' => Staff::loadActiveStaff(),
         'options' => [
             'id' => 'staff-id',
-            'disabled' => !$model->isNewRecord,
+            'disabled' => $disabled,
         ],
         'pluginOptions' => [
             'placeholder' => 'Choose Staff',
@@ -36,13 +35,16 @@ use kartik\widgets\ActiveForm;
         ],
     ]); ?>
 
+    <?= $form->field($model, 'acres')->textInput(['maxlength' => true, 'placeholder' => 'Acres', 'readonly' => $disabled]) ?>
+
 
     <?= $form->field($model, 'operation_id')->widget(DepDrop::class, [
         'type' => DepDrop::TYPE_SELECT2,
-        'options' => ['id' => 'operation-id'],
+        'options' => [
+            'id' => 'operation-id',
+        ],
         'data' => $model->isNewRecord ? [] : [$model->operation_id => $model->operation->name],
         'pluginOptions' => [
-
             'initialize' => !$model->isNewRecord,
             'depends' => ['staff-id'],
             'placeholder' => 'Choose operations',
@@ -72,6 +74,11 @@ use kartik\widgets\ActiveForm;
             ]
         ],
     ]); ?>
+
+    <?= $form->field($model, 'is_finalized')->checkbox([
+        'label' => 'Finalize Payment (This will lock editing)',
+        'disabled' => !$model->isNewRecord && $model->is_finalized,
+    ]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
