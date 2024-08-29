@@ -11,6 +11,6 @@
   "quotmark": "single",
   "curly": true,
   "eqeqeq": true,
-  "node": false,
+  "node": true,
   "camelcase": false
 }

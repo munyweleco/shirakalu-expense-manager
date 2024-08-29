@@ -3,36 +3,39 @@
 namespace app\models\base;
 
 use Yii;
+use app\common\models\BaseModel;
 
 /**
- * This is the model class for table "{{%payments}}".
- *
- * @property int $id
- * @property int $staff_id
- * @property int $operation_id
- * @property float $rate
- * @property float $acres
- * @property float $amount
- * @property string $payment_date
- * @property string $created_at
- * @property string $updated_at
- *
- * @property Operation $operation
- * @property Staff $staff
- */
-class Payment extends \app\common\models\BaseModel
+* This is the base model class for table "{{%payments}}".
+*
+* @property integer $id
+* @property integer $staff_id
+* @property integer $operation_id
+* @property float $rate
+* @property float $acres
+* @property float $amount
+* @property string $payment_date
+* @property boolean $is_finalized
+* @property string $created_at
+* @property string $updated_at
+*
+* @property Operation $operation
+* @property Staff $staff
+*/
+class Payment extends BaseModel
 {
+
     /**
-     * {@inheritdoc}
-     */
+    * @inheritdoc
+    */
     public static function tableName()
     {
         return '{{%payments}}';
     }
 
     /**
-     * {@inheritdoc}
-     */
+    * @inheritdoc
+    */
     public function rules()
     {
         return [
@@ -40,14 +43,13 @@ class Payment extends \app\common\models\BaseModel
             [['staff_id', 'operation_id'], 'integer'],
             [['rate', 'acres', 'amount'], 'number'],
             [['payment_date', 'created_at', 'updated_at'], 'safe'],
-            [['operation_id'], 'exist', 'skipOnError' => true, 'targetClass' => Operation::class, 'targetAttribute' => ['operation_id' => 'id']],
-            [['staff_id'], 'exist', 'skipOnError' => true, 'targetClass' => Staff::class, 'targetAttribute' => ['staff_id' => 'id']],
+            [['is_finalized'], 'boolean']
         ];
     }
 
     /**
-     * {@inheritdoc}
-     */
+    * @inheritdoc
+    */
     public function attributeLabels()
     {
         return [
@@ -58,28 +60,24 @@ class Payment extends \app\common\models\BaseModel
             'acres' => 'Acres',
             'amount' => 'Amount',
             'payment_date' => 'Payment Date',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'is_finalized' => 'Finalize payment',
         ];
     }
-
     /**
-     * Gets query for [[Operation]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
+    * Record relations here
+    * @return yii\db\ActiveQuery
+    */
     public function getOperation()
     {
-        return $this->hasOne(Operation::class, ['id' => 'operation_id']);
+        return $this->hasOne(\app\models\base\Operation::className(), ['id' => 'operation_id']);
     }
-
     /**
-     * Gets query for [[Staff]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
+    * Record relations here
+    * @return yii\db\ActiveQuery
+    */
     public function getStaff()
     {
-        return $this->hasOne(Staff::class, ['id' => 'staff_id']);
+        return $this->hasOne(\app\models\base\Staff::className(), ['id' => 'staff_id']);
     }
+
 }

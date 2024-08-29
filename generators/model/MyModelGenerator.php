@@ -425,115 +425,17 @@ class MyModelGenerator extends Generator
         return $properties;
     }
 
-    /**
-     * @return array the generated relation declarations
-     * @throws yii\base\NotSupportedException
-     */
     protected function generateRelations()
     {
-        if ($this->generateRelations !== self::RELATIONS_NONE) {
+        // Store the original value of nsModel
+        $originalNsModel = $this->nsModel;
+        $this->nsModel = $this->baseModelNamespace;
+        $relations = parent::generateRelations();
+        if (!$this->generateRelations === self::RELATIONS_NONE) {
             return [];
         }
 
-
-        $db = $this->getDbConnection();
-
-        $relations = [];
-        foreach ($this->getSchemaNames() as $schemaName) {
-            foreach ($db->getSchema()->getTableSchemas($schemaName) as $table) {
-                $className = $this->generateClassName($table->fullName);
-                foreach ($table->foreignKeys as $refs) {
-                    $refTable = $refs[0];
-                    $refTableSchema = $db->getTableSchema($refTable);
-                    if ($refTableSchema === null) {
-                        // Foreign key could point to non-existing table: https://github.com/yiisoft/yii2-gii/issues/34
-                        continue;
-                    }
-                    unset($refs[0]);
-                    $fks = array_keys($refs);
-                    $refClassName = $this->generateClassName($refTable);
-
-                    // Add relation for this table
-                    $link = $this->generateRelationLink(array_flip($refs));
-                    $relationName = $this->generateRelationName($relations, $table, $fks[0], false);
-                    $relFK = key($refs);
-                    $relations[$table->fullName][lcfirst($relationName)] = [
-                        self::REL_TYPE => "return \$this->hasOne(\\{$this->nsModel}\\$refClassName::class, $link);", // relation type
-                        self::REL_CLASS => $refClassName, //relclass
-                        self::REL_IS_MULTIPLE => 0, //is multiple
-                        self::REL_TABLE => $refTable, //related table
-                        self::REL_PRIMARY_KEY => $refs[$relFK], // related primary key
-                        self::REL_FOREIGN_KEY => $relFK, // this foreign key
-                        self::REL_IS_MASTER => in_array($relFK, $table->getColumnNames()) ? 1 : 0
-                    ];
-
-                    // Add relation for the referenced table
-                    $hasMany = $this->isHasManyRelation($table, $fks);
-                    $link = $this->generateRelationLink($refs);
-                    $relationName = $this->generateRelationName($relations, $refTableSchema, $className, $hasMany);
-                    $relations[$refTableSchema->fullName][lcfirst($relationName)] = [
-                        self::REL_TYPE => "return \$this->" . ($hasMany ? 'hasMany' : 'hasOne') . "(\\{$this->nsModel}\\$className::class, $link);", // rel type
-                        self::REL_CLASS => $className, //rel class
-                        self::REL_IS_MULTIPLE => $hasMany, //is multiple
-                        self::REL_TABLE => $table->fullName, // rel table
-                        self::REL_PRIMARY_KEY => $refs[key($refs)], // rel primary key
-                        self::REL_FOREIGN_KEY => key($refs), // this foreign key
-                        self::REL_IS_MASTER => in_array($relFK, $refTableSchema->getColumnNames()) ? 1 : 0
-                    ];
-                }
-
-                if (($junctionFks = $this->checkPivotTable($table)) === false) {
-                    continue;
-                }
-
-                $relations = $this->generateManyManyRelations($table, $junctionFks, $relations);
-            }
-        }
-
-        if ($this->generateRelations === self::RELATIONS_ALL_INVERSE) {
-            return $this->addInverseRelations($relations);
-        }
-
-        return $relations;
-    }
-
-    /**
-     * Generates relations using a junction table by adding an extra viaTable().
-     * @param TableSchema $table
-     * @param array $fks obtained from the checkPivotTable() method
-     * @param array $relations
-     * @return array modified $relations
-     */
-    private function generateManyManyRelations(TableSchema $table, array $fks, array $relations): array
-    {
-        $db = $this->getDbConnection();
-        $table0 = $fks[$table->primaryKey[0]][0];
-        $table1 = $fks[$table->primaryKey[1]][0];
-        $className0 = $this->generateClassName($table0);
-        $className1 = $this->generateClassName($table1);
-        $table0Schema = $db->getTableSchema($table0);
-        $table1Schema = $db->getTableSchema($table1);
-
-        $link = $this->generateRelationLink([$fks[$table->primaryKey[1]][1] => $table->primaryKey[1]]);
-        $viaLink = $this->generateRelationLink([$table->primaryKey[0] => $fks[$table->primaryKey[0]][1]]);
-        $relationName = $this->generateRelationName($relations, $table0Schema, $table->primaryKey[1], true);
-        $relations[$table0Schema->fullName][$relationName] = [
-            "return \$this->hasMany(\\{$this->nsModel}\\$className1::class, $link)->viaTable('"
-            . $this->generateTableName($table->name) . "', $viaLink);",
-            $className1,
-            true,
-        ];
-
-        $link = $this->generateRelationLink([$fks[$table->primaryKey[0]][1] => $table->primaryKey[0]]);
-        $viaLink = $this->generateRelationLink([$table->primaryKey[1] => $fks[$table->primaryKey[1]][1]]);
-        $relationName = $this->generateRelationName($relations, $table1Schema, $table->primaryKey[0], true);
-        $relations[$table1Schema->fullName][$relationName] = [
-            "return \$this->hasMany(\\{$this->nsModel}\\$className0::class, $link)->viaTable('"
-            . $this->generateTableName($table->name) . "', $viaLink);",
-            $className0,
-            true,
-        ];
-
+        $this->nsModel = $originalNsModel;
         return $relations;
     }
 
