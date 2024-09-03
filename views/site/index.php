@@ -1,133 +1,117 @@
 <?php
+/** @var yii\web\View $this */
+/** @var int $unfinalizedPaymentsCount Count of unfinalized payments */
+/** @var int $finalizedPaymentsCount Count of finalized payments */
+/** @var float $finalizedPaymentsPercentage Percentage of finalized payments */
+/** @var float $unfinalizedPaymentsPercentage Percentage of unfinalized payments */
+/** @var int $paymentsThisMonthCount Count of payments made in the current month */
+/** @var float $minPaymentAmount The lowest payment amount across all operations */
+/** @var float $maxPaymentAmount The highest payment amount across all operations */
+/** @var app\models\Operation[] $topOperationsByProfit Top 5 operations by profit */
+
+/** @var int $totalOperationsConducted The total number of operations conducted */
+
+use hail812\adminlte\widgets\InfoBox;
+use yii\helpers\Html;
+
 $this->params['breadcrumbs'] = [['label' => $this->title]];
+
 ?>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-lg-6">
-            <?= \hail812\adminlte\widgets\Alert::widget([
-                'type' => 'success',
-                'body' => '<h3>Congratulations we are live now!</h3>',
-            ]) ?>
-            <?= \hail812\adminlte\widgets\Callout::widget([
-                'type' => 'danger',
-                'head' => 'I am a danger callout!',
-                'body' => 'There is a problem that we need to fix. A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart.'
-            ]) ?>
-        </div>
-    </div>
 
+<div class="container-fluid mt-5">
     <div class="row">
-        <div class="col-12 col-sm-6 col-md-3">
-            <?= \hail812\adminlte\widgets\InfoBox::widget([
-                'text' => 'CPU Traffic',
-                'number' => '10 <small>%</small>',
-                'icon' => 'fas fa-cog',
-            ]) ?>
-        </div>
-    </div>
-
-    <div class="row">
+        <!-- Unfinalized Payments -->
         <div class="col-md-4 col-sm-6 col-12">
-            <?= \hail812\adminlte\widgets\InfoBox::widget([
-                'text' => 'Messages',
-                'number' => '1,410',
-                'icon' => 'far fa-envelope',
-            ]) ?>
-        </div>
-        <div class="col-md-4 col-sm-6 col-12">
-            <?= \hail812\adminlte\widgets\InfoBox::widget([
-                'text' => 'Bookmarks',
-                'number' => '410',
-                 'theme' => 'success',
-                'icon' => 'far fa-flag',
-            ]) ?>
-        </div>
-        <div class="col-md-4 col-sm-6 col-12">
-            <?= \hail812\adminlte\widgets\InfoBox::widget([
-                'text' => 'Uploads',
-                'number' => '13,648',
-                'theme' => 'gradient-warning',
-                'icon' => 'far fa-copy',
-            ]) ?>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-4 col-sm-6 col-12">
-            <?= \hail812\adminlte\widgets\InfoBox::widget([
-                'text' => 'Bookmarks',
-                'number' => '41,410',
-                'icon' => 'far fa-bookmark',
+            <?= InfoBox::widget([
+                'id' => 'bookmark-info-box',
+                'text' => 'Unfinalized Payments',
+                'number' => $unfinalizedPaymentsCount,
+                'theme' => 'info',
+                'icon' => 'fa fa-hourglass-start',
                 'progress' => [
-                    'width' => '70%',
-                    'description' => '70% Increase in 30 Days'
-                ]
-            ]) ?>
-        </div>
-        <div class="col-md-4 col-sm-6 col-12">
-            <?php $infoBox = \hail812\adminlte\widgets\InfoBox::begin([
-                'text' => 'Likes',
-                'number' => '41,410',
-                'theme' => 'success',
-                'icon' => 'far fa-thumbs-up',
-                'progress' => [
-                    'width' => '70%',
-                    'description' => '70% Increase in 30 Days'
-                ]
-            ]) ?>
-            <?= \hail812\adminlte\widgets\Ribbon::widget([
-                'id' => $infoBox->id.'-ribbon',
-                'text' => 'Ribbon',
-            ]) ?>
-            <?php \hail812\adminlte\widgets\InfoBox::end() ?>
-        </div>
-        <div class="col-md-4 col-sm-6 col-12">
-            <?= \hail812\adminlte\widgets\InfoBox::widget([
-                'text' => 'Events',
-                'number' => '41,410',
-                'theme' => 'gradient-warning',
-                'icon' => 'far fa-calendar-alt',
-                'progress' => [
-                    'width' => '70%',
-                    'description' => '70% Increase in 30 Days'
+                    'width' => "$unfinalizedPaymentsPercentage%",
+                    'description' => "$unfinalizedPaymentsPercentage% Increase in 30 Days"
                 ],
-                'loadingStyle' => true
+                'loadingStyle' => false
+            ])
+            ?>
+        </div>
+
+        <!-- Finalized Payments -->
+        <div class="col-md-4 col-sm-6 col-12">
+            <?= InfoBox::widget([
+                'text' => 'Finalized Payments',
+                'number' => $finalizedPaymentsCount,
+                'theme' => 'success',
+                'icon' => 'fa fa-hourglass-end',
+                'progress' => [
+                    'width' => "$finalizedPaymentsPercentage%",
+                    'description' => "$finalizedPaymentsPercentage% Increase in 30 Days"
+                ],
+            ]) ?>
+        </div>
+
+        <!-- Payments This Month -->
+        <div class="col-md-4 col-sm-6 col-12">
+            <?= InfoBox::widget([
+                'text' => 'Payments This Month',
+                'number' => $paymentsThisMonthCount,
+                'theme' => 'info',
+                'icon' => 'far fa-calendar-alt',
+                'icon' => 'fa fa-hourglass-end',
+                'progress' => [
+                    'width' => "0%",
+                    'description' => "$paymentsThisMonthCount Payments"
+                ],
             ]) ?>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-            <?= \hail812\adminlte\widgets\SmallBox::widget([
-                'title' => '150',
-                'text' => 'New Orders',
-                'icon' => 'fas fa-shopping-cart',
+    <div class="row mt-4">
+
+        <!-- Lowest Payment by Operation -->
+        <div class="col-md-4 col-sm-6 col-12">
+            <?= InfoBox::widget([
+                'text' => 'Lowest Payment by Operation',
+                'number' => Yii::$app->formatter->asCurrency($minPaymentAmount),
+                'theme' => 'danger',
+                'icon' => 'fa fa-money-check',
             ]) ?>
         </div>
-        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-            <?php $smallBox = \hail812\adminlte\widgets\SmallBox::begin([
-                'title' => '150',
-                'text' => 'New Orders',
-                'icon' => 'fas fa-shopping-cart',
-                'theme' => 'success'
-            ]) ?>
-            <?= \hail812\adminlte\widgets\Ribbon::widget([
-                'id' => $smallBox->id.'-ribbon',
-                'text' => 'Ribbon',
-                'theme' => 'warning',
-                'size' => 'lg',
-                'textSize' => 'lg'
-            ]) ?>
-            <?php \hail812\adminlte\widgets\SmallBox::end() ?>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-            <?= \hail812\adminlte\widgets\SmallBox::widget([
-                'title' => '44',
-                'text' => 'User Registrations',
-                'icon' => 'fas fa-user-plus',
-                'theme' => 'gradient-success',
-                'loadingStyle' => true
+
+        <!-- Highest Payment by Operation -->
+        <div class="col-md-4 col-sm-6 col-12">
+            <?= InfoBox::widget([
+                'text' => 'Highest Payment by Operation',
+                'number' => Yii::$app->formatter->asCurrency($maxPaymentAmount),
+                'theme' => 'primary',
+                'icon' => 'fa fa-money-bill',
             ]) ?>
         </div>
+    </div>
+
+    <div class="row mt-4">
+        <!-- Total Operations Conducted -->
+        <div class="col-md-4 col-sm-6 col-12">
+            <?= InfoBox::widget([
+                'text' => 'Total Operations Conducted',
+                'number' => $totalOperationsConducted,
+                'theme' => 'info',
+                'icon' => 'fas fa-seedling',
+            ]) ?>
+        </div>
+
+        <!-- Top Operations by Profit -->
+        <?php foreach ($topOperationsByProfit as $operation): ?>
+            <div class="col-md-4 col-sm-6 col-12">
+                <?= InfoBox::widget([
+                    'text' => 'Operation: ' . Html::encode($operation->operation_id),
+                    'number' => Yii::$app->formatter->asCurrency($operation->total_profit),
+                    'theme' => 'secondary',
+                    'icon' => 'fas fa-chart-line',
+                ]) ?>
+            </div>
+        <?php endforeach; ?>
     </div>
 </div>
+
