@@ -15,6 +15,7 @@ class Payment extends BasePayment
     public float $rate_value = 0.0;
     public bool $use_custom_rate = false;
 
+
     public function attributeLabels(): array
     {
         $labels = parent::attributeLabels();

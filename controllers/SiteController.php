@@ -4,6 +4,8 @@ namespace app\controllers;
 
 use app\common\controllers\BaseWebController;
 use app\models\ChangePasswordForm;
+use app\models\Operation;
+use app\models\Payment;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Json;
@@ -23,8 +25,46 @@ class SiteController extends BaseWebController
      */
     public function actionIndex()
     {
+        $startDate = date('Y-m-01');
+        $endDate = date('Y-m-t');
+
+        // Count of finalized and unfinalized payments
+        $finalizedPaymentsCount = Payment::find()->where(['is_finalized' => 1])->count();
+        $unfinalizedPaymentsCount = Payment::find()->where(['is_finalized' => 0])->count();
+
+        // Total number of payments
+        $totalPaymentsCount = $finalizedPaymentsCount + $unfinalizedPaymentsCount;
+
+        // Calculate percentages
+        $finalizedPaymentsPercentage = $totalPaymentsCount > 0 ? round(($finalizedPaymentsCount / $totalPaymentsCount) * 100) : 0;
+        $unfinalizedPaymentsPercentage = $totalPaymentsCount > 0 ? round(($unfinalizedPaymentsCount / $totalPaymentsCount) * 100) : 0;
+
+        // Other metrics
+        $paymentsThisMonthCount = Payment::find()->where(['between', 'payment_date', $startDate, $endDate])->count();
+
+        $minPaymentAmount = Payment::find()->where(['between', 'payment_date', $startDate, $endDate])->min('amount');
+        $maxPaymentAmount = Payment::find()->where(['between', 'payment_date', $startDate, $endDate])->max('amount');
+
+        $totalOperationsConducted = Operation::find()->count();
+        $topOperationsByProfit = [];
+
+        return $this->render('index', [
+            'finalizedPaymentsCount' => $finalizedPaymentsCount,
+            'unfinalizedPaymentsCount' => $unfinalizedPaymentsCount,
+            'finalizedPaymentsPercentage' => $finalizedPaymentsPercentage,
+            'unfinalizedPaymentsPercentage' => $unfinalizedPaymentsPercentage,
+            'paymentsThisMonthCount' => $paymentsThisMonthCount,
+            'maxPaymentAmount' => $maxPaymentAmount,
+            'minPaymentAmount' => $minPaymentAmount,
+            'topOperationsByProfit' => $topOperationsByProfit,
+            'totalOperationsConducted' => $totalOperationsConducted,
+        ]);
+    }
+
+    public function actionIndexOld()
+    {
         $this->view->title = "Shirakalu resort manager";
-        return $this->render('index');
+        return $this->render('index-old');
     }
 
     /**
