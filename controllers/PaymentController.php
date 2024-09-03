@@ -67,6 +67,7 @@ class PaymentController extends BaseWebController
         }
 
         $model->acres = 2;
+        $model->payment_date = date('Y-m-d'); //use current date as default
         return $this->render('create', [
             'model' => $model,
         ]);

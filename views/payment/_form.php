@@ -16,76 +16,114 @@ use kartik\widgets\ActiveForm;
 $disabled = !$model->isNewRecord && $model->is_finalized;
 ?>
 
-<div class="payment-form">
+<div class="row mt-5">
+    <div class="payment-form">
+        <div class="card">
 
-    <?php $form = ActiveForm::begin(); ?>
+            <div class="card-header">
+                <h5>Payment Details</h5>
+            </div>
 
-    <?= $form->errorSummary($model); ?>
+            <div class="card-body">
+                <?php $form = ActiveForm::begin([
+                    'options' => ['class' => 'row g-3'],
+                ]); ?>
 
+                <?= $form->errorSummary($model, ['class' => 'alert alert-danger']); ?>
 
-    <?= $form->field($model, 'staff_id')->widget(Select2::class, [
-        'data' => Staff::loadActiveStaff(),
-        'options' => [
-            'id' => 'staff-id',
-            'disabled' => $disabled,
-        ],
-        'pluginOptions' => [
-            'placeholder' => 'Choose Staff',
-            'allowClear' => true
-        ],
-    ]); ?>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'staff_id')->widget(Select2::class, [
+                        'data' => Staff::loadActiveStaff(),
+                        'options' => [
+                            'id' => 'staff-id',
+                            'disabled' => $disabled,
+                        ],
+                        'pluginOptions' => [
+                            'placeholder' => 'Choose Staff',
+                            'allowClear' => true,
+                        ],
+                    ]); ?>
+                </div>
 
-    <?= $form->field($model, 'acres')->textInput(['maxlength' => true, 'placeholder' => 'Acres', 'readonly' => $disabled]) ?>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'acres')->textInput([
+                        'maxlength' => true,
+                        'placeholder' => 'Acres',
+                        'readonly' => $disabled,
+                    ]) ?>
+                </div>
 
+                <div class="col-md-6">
+                    <?= $form->field($model, 'operation_id')->widget(DepDrop::class, [
+                        'type' => DepDrop::TYPE_SELECT2,
+                        'options' => [
+                            'id' => 'operation-id',
+                        ],
+                        'data' => $model->isNewRecord ? [] : [$model->operation_id => $model->operation->name],
+                        'pluginOptions' => [
+                            'initialize' => !$model->isNewRecord,
+                            'depends' => ['staff-id'],
+                            'placeholder' => 'Choose operations',
+                            'url' => yii\helpers\Url::to(['payment/get-operations']),
+                        ],
+                    ]); ?>
+                </div>
 
-    <?= $form->field($model, 'operation_id')->widget(DepDrop::class, [
-        'type' => DepDrop::TYPE_SELECT2,
-        'options' => [
-            'id' => 'operation-id',
-        ],
-        'data' => $model->isNewRecord ? [] : [$model->operation_id => $model->operation->name],
-        'pluginOptions' => [
-            'initialize' => !$model->isNewRecord,
-            'depends' => ['staff-id'],
-            'placeholder' => 'Choose operations',
-            'url' => yii\helpers\Url::to(['payment/get-operations'])
-        ],
-    ]); ?>
+                <div class="col-md-6 d-flex align-items-center">
+                    <?= $form->field($model, 'use_custom_rate', [
+                        'options' => ['class' => 'form-check'],
+                    ])->checkbox(['id' => 'use-custom-rate']) ?>
+                </div>
 
-    <?= $form->field($model, 'use_custom_rate')->checkbox(['id' => 'use-custom-rate']) ?>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'rate')->textInput([
+                        'placeholder' => 'Payment rate',
+                        'readonly' => true,
+                    ]) ?>
+                </div>
 
-    <!-- This is the text field where the rate value will be populated -->
-    <?= $form->field($model, 'rate')->textInput([
-        'placeholder' => 'Payment rate',
-        'readonly' => true,
-    ]) ?>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'amount')->textInput([
+                        'readonly' => true,
+                        'placeholder' => 'Amount',
+                    ]) ?>
+                </div>
 
+                <div class="col-md-6">
+                    <?= $form->field($model, 'payment_date')->widget(\kartik\datecontrol\DateControl::class, [
+                        'type' => \kartik\datecontrol\DateControl::FORMAT_DATE,
+                        'saveFormat' => 'php:Y-m-d',
+                        'ajaxConversion' => true,
+                        'options' => [
+                            'pluginOptions' => [
+                                'placeholder' => 'Choose Payment Date',
+                                'autoclose' => true,
+                            ],
+                        ],
+                    ]); ?>
+                </div>
 
-    <?= $form->field($model, 'amount')->textInput(['readonly' => true, 'placeholder' => 'Amount']) ?>
+                <div class="col-md-6 d-flex align-items-center">
+                    <?= $form->field($model, 'is_finalized', [
+                        'options' => ['class' => 'form-check'],
+                    ])->checkbox([
+                        'label' => 'Finalize Payment (This will lock editing)',
+                        'disabled' => !$model->isNewRecord && $model->is_finalized,
+                    ]) ?>
+                </div>
 
-    <?= $form->field($model, 'payment_date')->widget(\kartik\datecontrol\DateControl::class, [
-        'type' => \kartik\datecontrol\DateControl::FORMAT_DATE,
-        'saveFormat' => 'php:Y-m-d',
-        'ajaxConversion' => true,
-        'options' => [
-            'pluginOptions' => [
-                'placeholder' => 'Choose Payment Date',
-                'autoclose' => true
-            ]
-        ],
-    ]); ?>
+                <div class="col-12 text-center mt-4">
+                    <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', [
+                        'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary',
+                    ]) ?>
+                </div>
 
-    <?= $form->field($model, 'is_finalized')->checkbox([
-        'label' => 'Finalize Payment (This will lock editing)',
-        'disabled' => !$model->isNewRecord && $model->is_finalized,
-    ]) ?>
+                <?php ActiveForm::end(); ?>
 
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            </div>
+
+        </div>
     </div>
-
-    <?php ActiveForm::end(); ?>
-
 </div>
 
 <?php
