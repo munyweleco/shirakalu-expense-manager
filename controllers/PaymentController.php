@@ -45,7 +45,7 @@ class PaymentController extends BaseWebController
      * @return string
      * @throws NotFoundHttpException
      */
-    public function actionView($id): string
+    public function actionView(int $id): string
     {
         $model = $this->findModel($id);
         return $this->render('view', [
@@ -56,9 +56,10 @@ class PaymentController extends BaseWebController
     /**
      * Creates a new Payment model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
+     * @return string|Response
+     * @throws Exception
      */
-    public function actionCreate(): mixed
+    public function actionCreate(): string|Response
     {
         $model = new Payment();
 
@@ -82,7 +83,7 @@ class PaymentController extends BaseWebController
      * @throws NotFoundHttpException
      * @throws Exception
      */
-    public function actionUpdate($id): string|Response
+    public function actionUpdate(int $id): string|Response
     {
         $model = $this->findModel($id);
 
@@ -104,9 +105,11 @@ class PaymentController extends BaseWebController
      * Deletes an existing Payment model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
-     * @return mixed
+     * @return Response
+     * @throws Exception
+     * @throws NotFoundHttpException
      */
-    public function actionDelete($id)
+    public function actionDelete(int $id): Response
     {
         $model = $this->findModel($id);
 
@@ -126,7 +129,7 @@ class PaymentController extends BaseWebController
      * @return Payment the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findModel(int $id): Payment
     {
         if (($model = Payment::findOne($id)) !== null) {
             return $model;
@@ -137,6 +140,7 @@ class PaymentController extends BaseWebController
 
     /**
      * @return Response
+     * @throws \Exception
      */
     public function actionGetOperations(): Response
     {
