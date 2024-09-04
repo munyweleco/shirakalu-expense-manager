@@ -8,7 +8,7 @@ services:
     image: masgeek/shirakalu:${TAG:-latest}
     container_name: shirakalu
     ports:
-      - "8080:9000"
+      - "9000:80"
     volumes:
       - .:/var/www/html
     environment:
@@ -16,10 +16,8 @@ services:
       - DB_NAME=your_database_name
       - DB_USER=root
       - DB_PASSWORD=your_password
-    depends_on:
-      - db
-    networks:
-      - web
+    #    depends_on:
+    #      - db
 
   db:
     image: bitnami/mariadb:11.4.2
@@ -33,8 +31,6 @@ services:
       MARIADB_PASSWORD: ${DB_PASS}
     #    volumes:
     #      - db-data:/bitnami/mariadb
-    networks:
-      - web
 
   dozzle:
     image: amir20/dozzle:latest
@@ -45,7 +41,6 @@ services:
 
 networks:
   web:
-    external: true
 
 volumes:
   db-data:
